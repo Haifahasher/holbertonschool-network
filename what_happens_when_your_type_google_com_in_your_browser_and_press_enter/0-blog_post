@@ -189,9 +189,5 @@ What seems like an instant action actually involves a sophisticated orchestratio
 - **Scalability**: Learning how to design systems that handle millions of users
 - **Troubleshooting**: Diagnosing issues at different layers of the stack
 
-The next time you type a URL and press Enter, remember the incredible journey your request takes through DNS, TCP/IP, firewalls, SSL/TLS, load balancers, web servers, application servers, and databases to bring you the content you see on your screen.
 
 ---
-
-*This article covers the fundamental concepts of web infrastructure. In practice, systems like Google's are far more complex, involving CDNs, multiple data centers, advanced caching strategies, and sophisticated algorithms, but these core concepts form the foundation of how the web works.*
-
