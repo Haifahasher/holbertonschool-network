@@ -32,9 +32,6 @@ By reading this blog post, you will understand:
 - How databases interact with application servers
 - The complete request-response cycle
 
-## Publishing
-
-This blog post should be published on a platform like Medium or LinkedIn. After publishing, update the URL in the `0-blog_post` file or create a separate file with the published URL.
 
 ## Author
 
