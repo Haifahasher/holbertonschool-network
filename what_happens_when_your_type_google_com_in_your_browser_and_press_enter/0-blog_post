@@ -1,0 +1,197 @@
+# What Happens When You Type https://www.google.com in Your Browser and Press Enter?
+
+Have you ever wondered what happens behind the scenes when you type a URL like `https://www.google.com` into your browser and press Enter? This seemingly simple action triggers a complex cascade of events involving multiple layers of the internet infrastructure. Let's break down this journey step by step.
+
+## 1. DNS Request: Translating Human-Readable Names to IP Addresses
+
+The first thing your browser needs to do is translate the human-readable domain name `www.google.com` into an IP address that computers can understand. This process is called DNS (Domain Name System) resolution.
+
+### The DNS Lookup Process:
+
+1. **Browser Cache Check**: Your browser first checks its own cache to see if it has recently resolved this domain name.
+
+2. **Operating System Cache**: If not found, the browser checks the OS's DNS cache (hosts file and system cache).
+
+3. **Router Cache**: The request moves to your router's DNS cache.
+
+4. **ISP DNS Server**: If still not found, your computer queries your Internet Service Provider's (ISP) DNS server.
+
+5. **Recursive DNS Query**: The ISP's DNS server performs a recursive query:
+   - It checks the root DNS servers (`.`) to find who manages `.com` domains
+   - Queries the `.com` top-level domain (TLD) servers to find who manages `google.com`
+   - Queries the authoritative DNS servers for `google.com` to get the IP address for `www.google.com`
+
+6. **Response**: The IP address (e.g., `142.250.191.14`) is returned to your browser, and all caches along the way store this information for future use.
+
+## 2. TCP/IP: Establishing a Connection
+
+Once your browser has the IP address, it needs to establish a connection using the TCP/IP protocol suite.
+
+### TCP/IP Handshake:
+
+1. **TCP Three-Way Handshake**: Your browser initiates a TCP connection to the server's IP address on port 443 (HTTPS):
+   - **SYN**: Your computer sends a SYN (synchronize) packet to the server
+   - **SYN-ACK**: The server responds with a SYN-ACK (synchronize-acknowledge) packet
+   - **ACK**: Your computer sends an ACK (acknowledge) packet to complete the handshake
+
+2. **IP Routing**: The TCP packets are wrapped in IP packets and routed through multiple network devices (routers, switches) across the internet using the IP protocol. Each router uses routing tables to determine the best path to the destination.
+
+3. **Connection Established**: Once the handshake is complete, a reliable, bidirectional connection is established between your browser and the server.
+
+## 3. Firewall: Security Checkpoint
+
+Before your request reaches the server, it must pass through firewalls at multiple levels:
+
+1. **Local Firewall**: Your computer's firewall checks if the outbound connection is allowed.
+
+2. **Network Firewall**: Your router or network firewall may inspect the connection.
+
+3. **Server-Side Firewall**: Google's infrastructure has multiple layers of firewalls:
+   - **Perimeter Firewall**: Protects the entire data center
+   - **Application Firewall**: Inspects traffic at the application layer
+   - **Web Application Firewall (WAF)**: Protects against web-specific attacks
+
+Firewalls examine packet headers and content, checking against security rules to allow or block traffic. They protect against unauthorized access, DDoS attacks, and malicious payloads.
+
+## 4. HTTPS/SSL: Secure Communication
+
+Since you typed `https://`, your browser initiates a secure connection using HTTPS (HTTP over SSL/TLS).
+
+### SSL/TLS Handshake:
+
+1. **Client Hello**: Your browser sends a "Client Hello" message with:
+   - Supported TLS versions
+   - Supported cipher suites
+   - Random bytes for key generation
+
+2. **Server Hello**: The server responds with:
+   - Selected TLS version
+   - Selected cipher suite
+   - Server's SSL certificate (containing the public key)
+   - Random bytes for key generation
+
+3. **Certificate Verification**: Your browser:
+   - Verifies the certificate is valid and not expired
+   - Checks the certificate chain against trusted Certificate Authorities (CAs)
+   - Verifies the certificate is issued for `www.google.com`
+
+4. **Key Exchange**: 
+   - Your browser generates a pre-master secret
+   - Encrypts it with the server's public key and sends it
+   - Both sides derive session keys from the pre-master secret
+
+5. **Encrypted Communication**: All subsequent data is encrypted using symmetric encryption with the session keys, ensuring confidentiality and integrity.
+
+## 5. Load Balancer: Distributing Traffic
+
+Google receives millions of requests per second. To handle this load, they use load balancers that distribute incoming requests across multiple servers.
+
+### Load Balancing Process:
+
+1. **Request Arrival**: Your HTTPS request arrives at Google's load balancer.
+
+2. **Load Balancing Algorithm**: The load balancer uses algorithms such as:
+   - **Round Robin**: Distributes requests evenly
+   - **Least Connections**: Routes to the server with fewest active connections
+   - **Geographic**: Routes based on user location
+   - **Health Checks**: Only routes to healthy servers
+
+3. **Request Forwarding**: The load balancer forwards your request to an available web server, often maintaining session affinity (sticky sessions) if needed.
+
+4. **Benefits**: Load balancers provide:
+   - High availability (if one server fails, others handle traffic)
+   - Scalability (add more servers as needed)
+   - Performance optimization (route to closest/fastest server)
+
+## 6. Web Server: Handling HTTP Requests
+
+The web server receives your request and processes it.
+
+### Web Server Functions:
+
+1. **Request Parsing**: The web server (like Nginx or Apache) parses the HTTP request:
+   - HTTP method (GET, POST, etc.)
+   - Requested path (`/`)
+   - Headers (User-Agent, Accept, etc.)
+   - Cookies
+
+2. **Static Content**: If the request is for static content (HTML, CSS, images), the web server serves it directly from the file system.
+
+3. **Dynamic Content**: For dynamic content, the web server forwards the request to an application server.
+
+4. **Response Generation**: The web server formats the HTTP response with:
+   - Status code (200 OK, 404 Not Found, etc.)
+   - Headers (Content-Type, Set-Cookie, etc.)
+   - Response body
+
+## 7. Application Server: Processing Business Logic
+
+For dynamic content like search results, the web server forwards the request to an application server.
+
+### Application Server Process:
+
+1. **Request Handling**: The application server (running Google's search application) receives the request.
+
+2. **Business Logic Execution**:
+   - Processes the request (e.g., if there's a search query, it processes it)
+   - Handles user authentication if needed
+   - Manages session state
+   - Executes application-specific logic
+
+3. **Database Interaction**: The application server queries databases to retrieve or store data (see next section).
+
+4. **Response Generation**: The application server generates the response (HTML, JSON, etc.) and sends it back to the web server.
+
+5. **Caching**: Application servers often use caching layers (Redis, Memcached) to store frequently accessed data and reduce database load.
+
+## 8. Database: Storing and Retrieving Data
+
+When the application needs data, it queries databases.
+
+### Database Interaction:
+
+1. **Query Execution**: The application server sends SQL or NoSQL queries to the database:
+   - **Read Operations**: Retrieving search results, user data, etc.
+   - **Write Operations**: Storing user actions, logs, etc.
+
+2. **Database Types**: Google uses various database systems:
+   - **Relational Databases**: For structured data
+   - **NoSQL Databases**: For large-scale, distributed data
+   - **Search Indexes**: For fast search functionality
+   - **Caching Databases**: For frequently accessed data
+
+3. **Data Retrieval**: The database executes the query, retrieves the data, and returns it to the application server.
+
+4. **Response**: The application server uses this data to generate the final response.
+
+## The Complete Flow: Putting It All Together
+
+Here's the complete journey of your request:
+
+1. **You type** `https://www.google.com` and press Enter
+2. **DNS Resolution**: Browser resolves `www.google.com` to an IP address
+3. **TCP Connection**: Browser establishes TCP connection to the server
+4. **Firewall Check**: Request passes through multiple firewalls
+5. **SSL/TLS Handshake**: Secure connection is established
+6. **Load Balancer**: Request is routed to an available server
+7. **Web Server**: Receives and parses the HTTP request
+8. **Application Server**: Processes business logic
+9. **Database**: Retrieves necessary data
+10. **Response Path**: Data flows back through application server → web server → load balancer → your browser
+11. **Rendering**: Your browser receives the HTML, CSS, JavaScript, and renders the Google homepage
+
+## Conclusion
+
+What seems like an instant action actually involves a sophisticated orchestration of multiple systems working together. Understanding this process is crucial for software engineers, as it provides insight into:
+
+- **Performance Optimization**: Knowing where bottlenecks occur
+- **Security**: Understanding attack vectors and protection mechanisms
+- **Scalability**: Learning how to design systems that handle millions of users
+- **Troubleshooting**: Diagnosing issues at different layers of the stack
+
+The next time you type a URL and press Enter, remember the incredible journey your request takes through DNS, TCP/IP, firewalls, SSL/TLS, load balancers, web servers, application servers, and databases to bring you the content you see on your screen.
+
+---
+
+*This article covers the fundamental concepts of web infrastructure. In practice, systems like Google's are far more complex, involving CDNs, multiple data centers, advanced caching strategies, and sophisticated algorithms, but these core concepts form the foundation of how the web works.*
+

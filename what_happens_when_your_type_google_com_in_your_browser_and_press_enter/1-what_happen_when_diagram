@@ -1,0 +1,225 @@
+# Request Flow Diagram
+
+## Diagram URL
+
+**Paste your diagram URL here after creating it:**
+
+```
+[Your diagram URL will go here]
+Example: https://mermaid.live/edit#pako:... or https://www.gliffy.com/...
+```
+
+### Instructions to Generate Diagram URL:
+
+**Option 1: Mermaid Live Editor (Recommended)**
+1. Go to https://mermaid.live/
+2. Copy the Mermaid code from the section below
+3. Paste it into the editor
+4. The diagram will render automatically
+5. Click "Share" to get a shareable URL, or export as PNG/SVG and upload to an image hosting service
+6. Paste the URL above
+
+**Option 2: Gliffy (As suggested in requirements)**
+1. Go to https://www.gliffy.com/
+2. Create a new diagram
+3. Recreate the flow using the components described below
+4. Share the diagram and paste the URL above
+
+**Option 3: Other Tools**
+- Draw.io: https://app.diagrams.net/
+- Lucidchart: https://www.lucidchart.com/
+
+1. **Mermaid Live Editor**: https://mermaid.live/
+   - Copy the Mermaid code below
+   - Paste it into the editor
+   - Export as PNG/SVG
+   - Share the generated URL
+
+2. **Alternative Tools**:
+   - Gliffy: https://www.gliffy.com/
+   - Draw.io: https://app.diagrams.net/
+   - Lucidchart: https://www.lucidchart.com/
+
+## Mermaid Diagram Code
+
+```mermaid
+flowchart TD
+    Start([User types<br/>https://www.google.com<br/>and presses Enter]) --> Browser[Browser]
+    
+    Browser --> DNSCheck{DNS Cache<br/>Check}
+    DNSCheck -->|Cache Miss| DNSQuery[DNS Resolution Process]
+    DNSCheck -->|Cache Hit| GotIP[Got IP Address]
+    
+    DNSQuery --> BrowserCache[1. Browser Cache]
+    BrowserCache --> OSCache[2. OS Cache]
+    OSCache --> RouterCache[3. Router Cache]
+    RouterCache --> ISPDNS[4. ISP DNS Server]
+    ISPDNS --> RootDNS[5. Root DNS Servers]
+    RootDNS --> TLD[6. .com TLD Servers]
+    TLD --> AuthDNS[7. Authoritative DNS<br/>for google.com]
+    AuthDNS --> GotIP
+    
+    GotIP --> TCP[TCP/IP Connection<br/>Port 443 HTTPS]
+    TCP --> TCPHandshake[TCP Three-Way Handshake<br/>SYN → SYN-ACK → ACK]
+    TCPHandshake --> TCPEstablished[Connection Established]
+    
+    TCPEstablished --> LocalFW[Local Firewall<br/>Security Check]
+    LocalFW --> NetworkFW[Network Firewall<br/>Security Check]
+    NetworkFW --> Internet[Internet<br/>IP Routing]
+    
+    Internet --> ServerFW[Server-Side Firewall<br/>Perimeter & WAF]
+    ServerFW -->|Encrypted Traffic<br/>HTTPS/SSL| SSL[SSL/TLS Handshake<br/>Certificate Verification<br/>Key Exchange]
+    SSL --> Encrypted[Encrypted Connection<br/>Port 443]
+    
+    Encrypted --> LoadBalancer[Load Balancer<br/>Traffic Distribution]
+    LoadBalancer -->|Route to Server| WebServer1[Web Server 1]
+    LoadBalancer -->|Route to Server| WebServer2[Web Server 2]
+    LoadBalancer -->|Route to Server| WebServer3[Web Server N...]
+    
+    WebServer1 --> WebServer[Web Server<br/>Nginx/Apache<br/>Parses HTTP Request]
+    WebServer2 --> WebServer
+    WebServer3 --> WebServer
+    
+    WebServer -->|Static Content| StaticServe[Serve Static Files]
+    WebServer -->|Dynamic Content| AppServer[Application Server<br/>Business Logic Processing]
+    
+    AppServer --> DBQuery[Query Database]
+    DBQuery --> Database[(Database<br/>Data Storage & Retrieval)]
+    Database -->|Return Data| AppServer
+    
+    AppServer -->|Generate Response| WebServer
+    StaticServe -->|Serve Files| WebServer
+    WebServer -->|HTTP Response| LoadBalancer
+    LoadBalancer -->|Encrypted Response| SSL
+    SSL --> Internet
+    Internet --> NetworkFW
+    NetworkFW --> LocalFW
+    LocalFW --> Browser
+    Browser --> Render[Browser Renders<br/>HTML, CSS, JavaScript]
+    Render --> End([Google Homepage<br/>Displayed])
+    
+    style Start fill:#e1f5ff
+    style End fill:#d4edda
+    style DNSQuery fill:#fff3cd
+    style TCP fill:#f8d7da
+    style SSL fill:#d1ecf1
+    style ServerFW fill:#f5c6cb
+    style LoadBalancer fill:#cfe2ff
+    style WebServer fill:#d4edda
+    style AppServer fill:#d1ecf1
+    style Database fill:#fff3cd
+    style Encrypted fill:#d1ecf1
+```
+
+## Diagram Components Explained
+
+The diagram illustrates:
+
+1. **DNS Resolution**: Shows the complete DNS lookup process from browser cache through ISP DNS to authoritative servers
+2. **TCP/IP Connection**: Displays the TCP three-way handshake on port 443 (HTTPS)
+3. **Encrypted Traffic**: Highlights SSL/TLS handshake and encrypted communication
+4. **Firewall**: Shows multiple firewall layers (Local, Network, Server-Side)
+5. **Load Balancer**: Demonstrates traffic distribution across multiple web servers
+6. **Web Server**: Shows request parsing and serving static/dynamic content
+7. **Application Server**: Displays business logic processing
+8. **Database**: Shows data querying and retrieval
+
+## How to Use
+
+1. Copy the Mermaid code above
+2. Go to https://mermaid.live/
+3. Paste the code
+4. The diagram will render automatically
+5. Click "Actions" → "Export PNG" or "Export SVG" to save
+6. Share the diagram URL or embed it in your blog post
+
+## Alternative: ASCII Diagram
+
+If you prefer a text-based diagram, here's an ASCII version:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    REQUEST FLOW DIAGRAM                          │
+└─────────────────────────────────────────────────────────────────┘
+
+User types https://www.google.com
+         │
+         ▼
+    ┌─────────┐
+    │ Browser │
+    └────┬────┘
+         │
+         ▼
+┌────────────────────────────────────┐
+│  1. DNS RESOLUTION                 │
+│  Browser Cache → OS Cache →        │
+│  Router → ISP DNS → Root DNS →    │
+│  TLD → Authoritative DNS           │
+│  Returns: 142.250.191.14           │
+└────────────┬───────────────────────┘
+             │
+             ▼
+┌────────────────────────────────────┐
+│  2. TCP/IP CONNECTION              │
+│  Port 443 (HTTPS)                  │
+│  SYN → SYN-ACK → ACK               │
+└────────────┬───────────────────────┘
+             │
+             ▼
+┌────────────────────────────────────┐
+│  3. FIREWALL                       │
+│  Local → Network → Server-Side     │
+└────────────┬───────────────────────┘
+             │
+             ▼
+┌────────────────────────────────────┐
+│  4. HTTPS/SSL                      │
+│  SSL/TLS Handshake                 │
+│  Certificate Verification          │
+│  🔒 ENCRYPTED TRAFFIC              │
+└────────────┬───────────────────────┘
+             │
+             ▼
+┌────────────────────────────────────┐
+│  5. LOAD BALANCER                  │
+│  Distributes to:                   │
+│  ┌──────────┐  ┌──────────┐       │
+│  │Web Server│  │Web Server│  ...  │
+│  │    1     │  │    2     │       │
+│  └──────────┘  └──────────┘       │
+└────────────┬───────────────────────┘
+             │
+             ▼
+┌────────────────────────────────────┐
+│  6. WEB SERVER                     │
+│  Parses HTTP Request               │
+│  Serves Static Content OR          │
+│  Forwards to Application Server    │
+└────────────┬───────────────────────┘
+             │
+             ▼
+┌────────────────────────────────────┐
+│  7. APPLICATION SERVER             │
+│  Processes Business Logic          │
+│         │                          │
+│         ▼                          │
+│  ┌──────────────┐                 │
+│  │  8. DATABASE │                 │
+│  │  Query Data  │                 │
+│  └──────┬───────┘                 │
+│         │                          │
+│         ▼                          │
+│  Returns Data                      │
+└────────────┬───────────────────────┘
+             │
+             ▼
+    Response flows back:
+    App Server → Web Server → 
+    Load Balancer → SSL → 
+    Firewall → Internet → Browser
+    
+             │
+             ▼
+    Browser Renders Page
+```
+
